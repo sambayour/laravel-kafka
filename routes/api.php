@@ -19,10 +19,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'throttle'], function () {
     Route::post('signup', [AuthController::class, 'register']);
 
     Route::group(['prefix' => 'products', 'middleware' => ['auth:sanctum']], function () {
-        Route::get('/get-all-products', [ProductController::class, 'index']);
-        Route::post('/create-product', [ProductController::class, 'store']);
-        Route::patch('/update-product/{id}', [ProductController::class, 'update']);
-        Route::get('/get-single-product/{id}', [ProductController::class, 'show']);
-        Route::delete('/delete-product/{id}', [ProductController::class, 'destroy']);
+        Route::get('/get-all-products', [ProductController::class, 'index'])->name('product.index');
+        Route::post('/create-product', [ProductController::class, 'store'])->name('product.store');
+        Route::patch('/update-product/{id}', [ProductController::class, 'update'])->name('product.update');
+        Route::get('/get-single-product/{id}', [ProductController::class, 'show'])->name('product.show');
+        Route::delete('/delete-product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
     });
 });

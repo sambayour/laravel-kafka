@@ -99,6 +99,7 @@ class ProductController extends Controller
     public function destroy(Request $request)
     {
         try {
+            $data = $this->productService->delete($request);
             return response()->json(['status' => Response::HTTP_OK, 'data' => null, 'message' => 'Product deleted successfully'], Response::HTTP_OK);
         } catch (Throwable $ex) {
             $statusCode = GeneralHelpers::checkStatusCode($ex->getCode());
