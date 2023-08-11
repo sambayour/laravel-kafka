@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,12 @@ Route::group(['prefix' => 'v1', 'middleware' => 'throttle'], function () {
 
     Route::post('login', [AuthController::class, 'login']);
     Route::post('signup', [AuthController::class, 'register']);
+
+    Route::group(['prefix' => 'products', 'middleware' => ['auth:sanctum']], function () {
+        Route::get('/get-all-products', [ProductController::class, 'index']);
+        Route::post('/create-product', [ProductController::class, 'store']);
+        Route::patch('/update-product/{id}', [ProductController::class, 'update']);
+        Route::get('/get-single-product/{id}', [ProductController::class, 'show']);
+        Route::delete('/delete-product/{id}', [ProductController::class, 'destroy']);
+    });
 });
