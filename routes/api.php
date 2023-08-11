@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,5 +25,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'throttle'], function () {
         Route::patch('/update-product/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::get('/get-single-product/{id}', [ProductController::class, 'show'])->name('product.show');
         Route::delete('/delete-product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+    });
+    Route::group(['prefix' => 'carts', 'middleware' => ['auth:sanctum']], function () {
+        Route::post('/add-product-to-cart', [CartController::class, 'addToCart'])->name('cart.addToCart');
+        Route::get('/get-cart-items', [CartController::class, 'getCartItems'])->name('cart.getCartItems');
+        Route::delete('/delete-cart-items', [CartController::class, 'deleteCartItems'])->name('cart.deleteCartItems');
     });
 });
