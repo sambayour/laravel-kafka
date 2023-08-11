@@ -1,6 +1,5 @@
 <?php
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,8 +11,9 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "api" middleware group. Make something great!
 |
-*/
+ */
+Route::group(['prefix' => 'v1', 'middleware' => 'throttle'], function () {
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('signup', [AuthController::class, 'register']);
 });
