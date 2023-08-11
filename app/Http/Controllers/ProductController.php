@@ -6,6 +6,7 @@ use App\Helpers\GeneralHelpers;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Kafka\Producer;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -15,9 +16,10 @@ use Throwable;
 class ProductController extends Controller
 {
     private $productService;
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, Producer $producer)
     {
         $this->productService = $productService;
+        $this->$producer = $producer;
     }
 
     /**
@@ -50,6 +52,7 @@ class ProductController extends Controller
     {
         try {
             $data = new ProductResource($this->productService->create($request));
+            $producer->produce($data);
             return response()->json(['status' => Response::HTTP_CREATED, 'data' => $data, 'message' => 'Product created successfully'], Response::HTTP_CREATED);
         } catch (Throwable $ex) {
             $statusCode = GeneralHelpers::checkStatusCode($ex->getCode());

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\GeneralHelpers;
 use App\Http\Requests\CartRequest;
 use App\Http\Resources\CartResource;
+use App\Kafka\Consumer;
 use App\Services\CartService;
 use Illuminate\Http\Response;
 use Throwable;
@@ -12,15 +13,18 @@ use Throwable;
 class CartController extends Controller
 {
     private $cartService;
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, Consumer $consumer)
     {
         $this->cartService = $cartService;
+        $this->$consumer = $consumer;
+
     }
 
     public function addToCart(CartRequest $request)
     {
         try {
             $data = new CartResource($this->cartService->addToCart($request->validated()));
+            $consumer->consume($data);
             return response()->json(['status' => Response::HTTP_CREATED, 'data' => $data, 'message' => 'Cart fetched successfully'], Response::HTTP_CREATED);
         } catch (Throwable $ex) {
             $statusCode = GeneralHelpers::checkStatusCode($ex->getCode());
