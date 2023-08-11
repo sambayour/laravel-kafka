@@ -14,8 +14,8 @@ class AuthController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                "first_name" => ['string'],
-                "last_name" => ['string'],
+                "first_name" => ['string', 'required'],
+                "last_name" => ['string', 'required'],
                 "password" => ['string'],
                 "email" => ['required', 'email:dns,rfc', 'unique:users'],
 
